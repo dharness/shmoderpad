@@ -1,0 +1,30 @@
+{
+  "name": "shmoderpad",
+  "version": "0.0.1",
+  "description": "A simple coderpad clone because I'm broke",
+  "main": "server.js",
+  "scripts": {
+    "build:w": "webpack --progress --watch",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prestart": "npm run build:w &",
+    "start": "nodemon server.js"
+  },
+  "author": "Dylan Harness",
+  "contributors": [
+    "Dylan Harness <dylan@kingofthestack.com> (https://kingofthestack.com)"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "2.5.5",
+    "express": "^4.14.0",
+    "nodemon": "1.11.0",
+    "sharedb": "^1.0.0-beta",
+    "sharedb-string-binding": "^1.0.0",
+    "webpack": "1.14.0",
+    "websocket-json-stream": "^0.0.1",
+    "ws": "^1.1.0"
+  },
+  "devDependencies": {
+    "browserify": "^13.0.1"
+  }
+}
