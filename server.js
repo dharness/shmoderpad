@@ -12,7 +12,8 @@ app.set('view engine', 'ejs');
 var server = http.createServer(app);
 
 app.get('/pad', (req, res) => {
-  res.render('index')
+  res.send('index')
+  // res.render('index')
 });
 
 
