@@ -20,6 +20,7 @@
     "ejs": "2.5.5",
     "express": "^4.14.0",
     "nodemon": "1.11.0",
+    "pm2": "2.2.3",
     "sharedb": "^1.0.0-beta",
     "sharedb-string-binding": "^1.0.0",
     "webpack": "1.14.0",
