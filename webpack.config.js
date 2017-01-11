@@ -3,5 +3,13 @@ module.exports = {
   output: {
     filename: '.tmp/public/js/bundle.js'
   },
-  devtool: "cheap-eval-source-map"
+  devtool: "cheap-eval-source-map",
+  module: {
+    loaders: [
+      {
+        test: /\.(scss|sass|css)$/,
+        loaders: ["style-loader", "css-loader", "sass-loader"]
+      }
+    ]
+  }
 }

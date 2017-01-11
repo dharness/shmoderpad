@@ -1,15 +1,22 @@
 var sharedb = require('sharedb/lib/client');
-var StringBinding = require('sharedb-string-binding');
+var otText = require('ot-text');
+var CodeMirror = require('codemirror');
+var ShareDBCodeMirror = require('sharedb-codemirror');
+require('codemirror/mode/javascript/javascript.js');
 
-// Open WebSocket connection to ShareDB server
-var socket = new WebSocket('ws://' + window.location.host);
-var connection = new sharedb.Connection(socket);
+sharedb.types.map['json0'].registerSubtype(otText.type);
 
-// Create local Doc instance mapped to 'examples' collection document with id 'textarea'
-var doc = connection.get('examples', 'textarea');
-doc.subscribe(function(err) {
-  if (err) throw err;
-  var element = document.querySelector('textarea');
-  var binding = new StringBinding(element, doc);
-  binding.setup();
+var editorElem = document.getElementById('editor');
+var editor = CodeMirror.fromTextArea(editorElem, {
+  mode: "javascript"
+});
+
+var socket = new WebSocket("ws://" + location.host);
+var shareConnection = new sharedb.Connection(socket);
+
+var doc = shareConnection.get('users', 'jane');
+
+ShareDBCodeMirror.attachDocToCodeMirror(doc, editor, {
+  key: 'content',
+  verbose: true
 });

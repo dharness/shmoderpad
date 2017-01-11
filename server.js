@@ -1,48 +1,70 @@
 var http = require('http');
+var path = require('path');
+var Duplex = require('stream').Duplex;
+var inherits = require('util').inherits;
 var express = require('express');
 var ShareDB = require('sharedb');
-var WebSocket = require('ws');
-var WebSocketJSONStream = require('websocket-json-stream');
+var WebSocketServer = require('ws').Server;
+var otText = require('ot-text');
 const PORT = process.env.PORT || 8080;
 
-// Create a web server to serve files and listen to WebSocket connections
+
+ShareDB.types.map['json0'].registerSubtype(otText.type);
+
+var shareDB = ShareDB();
+
 var app = express();
 app.use(express.static('.tmp/public'));
 app.set('view engine', 'ejs');
-var server = http.createServer(app);
 
 app.get('/pad', (req, res) => {
   res.render('index')
 });
 
 
-var backend = new ShareDB();
-createDoc(startServer);
+var server = http.createServer(app);
+server.listen(PORT, function (err) {
+  if (err) {
+    throw err;
+  }
+  console.log('Listening on http://%s:%s', server.address().address, server.address().port);
+});
 
+var webSocketServer = new WebSocketServer({server: server});
 
-// Create initial document then fire callback
-function createDoc(callback) {
-  var connection = backend.connect();
-  var doc = connection.get('examples', 'textarea');
-  doc.fetch(function(err) {
-    if (err) throw err;
-    if (doc.type === null) {
-      doc.create('', callback);
-      return;
-    }
-    callback();
-  });
-}
+webSocketServer.on('connection', function (socket) {
+  var stream = new WebsocketJSONOnWriteStream(socket);
+  shareDB.listen(stream);
+});
 
-function startServer() {
+function WebsocketJSONOnWriteStream(socket) {
+  Duplex.call(this, {objectMode: true});
 
-  // Connect any incoming WebSocket connection to ShareDB
-  var wss = new WebSocket.Server({server: server});
-  wss.on('connection', function(ws, req) {
-    var stream = new WebSocketJSONStream(ws);
-    backend.listen(stream);
+  this.socket = socket;
+  var stream = this;
+
+  socket.on('message', function(data) {
+    stream.push(data);
   });
 
-  server.listen(PORT);
-  console.log(`Listening on http://localhost:${PORT}`);
+  socket.on("close", function() {
+    stream.push(null);
+  });
+
+  this.on("error", function(msg) {
+    console.warn('WebsocketJSONOnWriteStream error', msg);
+    socket.close();
+  });
+
+  this.on("end", function() {
+    socket.close();
+  });
 }
+inherits(WebsocketJSONOnWriteStream, Duplex);
+
+WebsocketJSONOnWriteStream.prototype._write = function(value, encoding, next) {
+  this.socket.send(JSON.stringify(value));
+  next();
+};
+
+WebsocketJSONOnWriteStream.prototype._read = function() {};
