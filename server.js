@@ -44,5 +44,5 @@ function startServer() {
   });
 
   server.listen(PORT);
-  console.log('Listening on http://localhost:8080');
+  console.log(`Listening on http://localhost:${PORT}`);
 }
