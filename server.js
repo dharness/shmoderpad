@@ -3,7 +3,7 @@ var express = require('express');
 var ShareDB = require('sharedb');
 var WebSocket = require('ws');
 var WebSocketJSONStream = require('websocket-json-stream');
-const PORT = process.env.port || 8080;
+const PORT = process.env.PORT || 8080;
 
 // Create a web server to serve files and listen to WebSocket connections
 var app = express();
