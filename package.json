@@ -4,10 +4,12 @@
   "description": "A simple coderpad clone because I'm broke",
   "main": "server.js",
   "scripts": {
+    "build": "webpack",
     "build:w": "webpack --progress --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prestart": "npm run build:w &",
-    "start": "nodemon server.js"
+    "predev": "npm run build:w &",
+    "dev": "nodemon server.js",
+    "start": "node server.js"
   },
   "author": "Dylan Harness",
   "contributors": [
@@ -23,8 +25,5 @@
     "webpack": "1.14.0",
     "websocket-json-stream": "^0.0.1",
     "ws": "^1.1.0"
-  },
-  "devDependencies": {
-    "browserify": "^13.0.1"
   }
 }
