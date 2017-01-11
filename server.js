@@ -3,6 +3,7 @@ var express = require('express');
 var ShareDB = require('sharedb');
 var WebSocket = require('ws');
 var WebSocketJSONStream = require('websocket-json-stream');
+const PORT = process.env.port || 8080;
 
 // Create a web server to serve files and listen to WebSocket connections
 var app = express();
@@ -42,6 +43,6 @@ function startServer() {
     backend.listen(stream);
   });
 
-  server.listen(8080);
+  server.listen(PORT);
   console.log('Listening on http://localhost:8080');
 }
