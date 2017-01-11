@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "predev": "npm run build:w &",
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "pm2 start server.js --name \"shmoderpad\""
   },
   "author": "Dylan Harness",
   "contributors": [
